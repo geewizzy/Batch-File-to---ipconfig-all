@@ -1,0 +1,49 @@
+REM Batch File to - ipconfig/all
+
+ set mydate=%date%
+ for /F "tokens=2" %%i in ('date /t') do set date=%%i
+ set mytime=%time%
+ echo   (LDG) -  %mydate%:%mytime%
+ --------------------------------------------------------------------------------------------
+
+
+ipconfig/all | find "Host Name"
+ipconfig/all | find "IPv4" 
+ipconfig/all | find "Default Gateway"
+
+ --------------------------------------------------------------------------------------------
+
+set "ip="
+for /f "tokens=2,3 delims={,}" %%a in ('"WMIC NICConfig where IPEnabled="True" get DefaultIPGateway /value | find "I" "') do if not defined ip set ip=%%~a
+
+IP "Default Gateway" is: %ip%
+ --------------------------------------------------------------------------------------------
+
+ipconfig/all | find "IPv6"
+ --------------------------------------------------------------------------------------------
+
+echo  (IP Address INFO)
+arp -a
+ --------------------------------------------------------------------------------------------
+
+REM returns wireless addresses connections
+getmac /v /fo list
+ --------------------------------------------------------------------------------------------
+
+REM ipconfig /all | find "Physical Address" /i
+
+REM arp -a 192.168.0.2
+REM arp -a 192.168.0.4
+REM  --------------------------------------------------------------------------------------------
+
+
+for /f "delims=[] tokens=2" %%a in ('ping -4 -n 1 %ComputerName% ^| findstr [') do set NetworkIP=%%a
+echo *** Network IP: %NetworkIP%
+
+for /f %%a in ('powershell Invoke-RestMethod api.ipify.org') do set PublicIP=%%a
+echo *** Public  IP: %PublicIP%  
+
+
+pause
+
+REM exit
